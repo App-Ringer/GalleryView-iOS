@@ -25,10 +25,19 @@ class ImageViewerVC: UIViewController, UIScrollViewDelegate {
         updateZoomFor(size: view.bounds.size)
     }
     
+    //MARK: - IBAction
     @IBAction func closeAction(sender: UIButton) {
         self.dismiss(animated: true)
     }
     
+    @IBAction func selectPhotoBtnPressed(_ sender: UIButton) {
+        let imageBase64Str = image.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
+        let json = ["success": true, "imageData": imageBase64Str] as [String : Any]
+        GalleryView.resultCallBack?(json)
+    }
+}
+
+extension ImageViewerVC {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return img
     }

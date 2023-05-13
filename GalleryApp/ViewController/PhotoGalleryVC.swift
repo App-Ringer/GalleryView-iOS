@@ -49,6 +49,13 @@ class PhotoGalleryVC: UIViewController {
         collectionView.addGestureRecognizer(gesture)
     }
     
+    func setCollectionView() {
+        let podBundle = Bundle(for: SelectPhotoCell.self)
+        collectionView.register(UINib(nibName: "SelectPhotoCell", bundle: podBundle), forCellWithReuseIdentifier: "SelectPhotoCell")
+        collectionView.register(UINib(nibName: "CollectionHeaderView", bundle: podBundle), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier:"CollectionHeaderView")
+        collectionView.register(UINib(nibName: "ToolTipCell", bundle: podBundle), forCellWithReuseIdentifier: "ToolTipCell")
+    }
+    
     @objc func didReceivePinchGesture(gesture: UIPinchGestureRecognizer) {
         if gesture.state == UIPinchGestureRecognizer.State.began {
             if let index = photoGalleryVM.selectedIndex {
@@ -95,10 +102,10 @@ class PhotoGalleryVC: UIViewController {
         }
     }
     
-    func setCollectionView() {
-        collectionView.register(UINib(nibName: "SelectPhotoCell", bundle: .main), forCellWithReuseIdentifier: "SelectPhotoCell")
-        collectionView.register(UINib(nibName: "CollectionHeaderView", bundle: .main), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier:"CollectionHeaderView")
-        collectionView.register(UINib(nibName: "ToolTipCell", bundle: .main), forCellWithReuseIdentifier: "ToolTipCell")
+    //MARK: - IBAction
+    @IBAction func closeBtnPressed(_ sender: UIButton) {
+        let json = ["success": false, "imageData": ""] as [String : Any]
+        GalleryView.resultCallBack?(json)
     }
 }
 
@@ -192,7 +199,7 @@ extension PhotoGalleryVC: UICollectionViewDelegate, UICollectionViewDataSource {
         guard let assetVMArr = photoGalleryVM.getItemListAtIndex(selectedAssetIndex) else { return }
         
         let assetVM = assetVMArr[selectedAssetIndex.row]
-        self.photoGalleryVM.presentImageViewer(selectedAsset: assetVM.asset, collectionView: self.collectionView,viewController: self)
+        self.photoGalleryVM.presentImageViewer(selectedAsset: assetVM.asset, collectionView: self.collectionView, viewController: self)
     }
 }
 
