@@ -36,7 +36,7 @@ class ImageViewerVC: UIViewController, UIScrollViewDelegate {
         }
         let json = ["success": true, "imageData": data] as [String : Any]
         GalleryView.resultCallBack?(json)
-        self.dismiss(animated: true) {
+        self.dismiss(animated: false) {
             self.shouldDismiss?(true)
         }
     }
