@@ -47,6 +47,14 @@ class PhotoGalleryVC: UIViewController {
         
         gesture = UIPinchGestureRecognizer(target: self, action: #selector(didReceivePinchGesture(gesture:)))
         collectionView.addGestureRecognizer(gesture)
+        
+        photoGalleryVM.shouldDismiss = { dismissVC in
+            guard dismissVC else {
+                return
+            }
+            
+            self.dismissGalleryView()
+        }
     }
     
     func setCollectionView() {
@@ -106,6 +114,15 @@ class PhotoGalleryVC: UIViewController {
     @IBAction func closeBtnPressed(_ sender: UIButton) {
         let json = ["success": false, "imageData": ""] as [String : Any]
         GalleryView.resultCallBack?(json)
+        self.dismissGalleryView()
+    }
+    
+    func dismissGalleryView() {
+        if GalleryView.isNaigationControllerPresent {
+            self.dismiss(animated: true)
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 }
 

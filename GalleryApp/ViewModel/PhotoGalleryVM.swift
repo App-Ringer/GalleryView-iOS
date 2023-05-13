@@ -28,6 +28,8 @@ class PhotoGalleryVM {
     var portraitRowCellCount = PORTRAIT_MODE_MIN
     var landscapeRowCellCount = LANDSCAPE_MODE_MIN
     
+    var shouldDismiss: ((Bool) -> ())?
+    
     func getRowNumber(collectionView: UICollectionView) {
         if let tIndex = self.toolTipIndex, let sIndex = self.selectedIndex {
             if (sIndex.row >= tIndex.row) && (sIndex.section == tIndex.section) {
@@ -132,6 +134,9 @@ class PhotoGalleryVM {
             guard let image = image else { return }
             let vc = viewController.storyboard?.instantiateViewController(withIdentifier: "ImageViewerVC") as! ImageViewerVC
             vc.image = image
+            vc.shouldDismiss = { [weak self] dismissVC in
+                self?.shouldDismiss?(dismissVC)
+            }
             viewController.present(vc, animated: true)
         }
     }

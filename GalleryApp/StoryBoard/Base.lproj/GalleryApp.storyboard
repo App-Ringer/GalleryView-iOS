@@ -29,7 +29,7 @@
                                     <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <action selector="closeActionWithSender:" destination="qnF-Cs-GaL" eventType="touchUpInside" id="a8w-1C-B3Y"/>
+                                    <action selector="closeBtnPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="b9v-4n-OP9"/>
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="DKJ-dA-Iuu">

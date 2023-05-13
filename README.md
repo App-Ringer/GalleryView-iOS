@@ -40,7 +40,7 @@ GalleryView.resultCallBack = { [weak self] (jsonObject) -> Void in
 
 Response Structure
 ```
-["success": true, "imgData":"Image data as base64 string"]
+["success": true, "imgData":"Image data"]
 ```
 
 ## License

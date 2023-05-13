@@ -13,14 +13,12 @@ public class GalleryViewConfig {
     public var resultCallBack:(([String:Any]) -> ())?
     public var navigation: UINavigationController?
     public var isNaigationControllerPresent = false
-    public var isNaigationControllerAnimated = true
 }
 
 //MARK: Navigation
 public extension GalleryViewConfig {
-    func present(with navigationController: UINavigationController, animated: Bool = true) {
+    func present(with navigationController: UINavigationController) {
         self.isNaigationControllerPresent = true
-        self.isNaigationControllerAnimated = animated
         self.navigation = navigationController
         self.launchGallery()
     }
@@ -38,9 +36,9 @@ private extension GalleryViewConfig {
         let vc = storyBoard.instantiateViewController(withIdentifier: "PhotoGalleryVC") as? PhotoGalleryVC
         if self.isNaigationControllerPresent {
             vc?.modalPresentationStyle = .fullScreen
-            self.navigation?.present(vc!, animated: self.isNaigationControllerAnimated, completion: nil)
+            self.navigation?.present(vc!, animated: true, completion: nil)
         } else {
-            self.navigation?.pushViewController(vc!, animated: self.isNaigationControllerAnimated)
+            self.navigation?.pushViewController(vc!, animated: true)
         }
     }
 }

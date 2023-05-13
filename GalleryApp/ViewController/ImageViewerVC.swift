@@ -12,7 +12,7 @@ class ImageViewerVC: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     
     var image: UIImage = UIImage()
-    var isInfoGrapic: Bool = false
+    var shouldDismiss: ((Bool) -> ())?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,9 +31,14 @@ class ImageViewerVC: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func selectPhotoBtnPressed(_ sender: UIButton) {
-        let imageBase64Str = image.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
-        let json = ["success": true, "imageData": imageBase64Str] as [String : Any]
+        guard let data = image.jpegData(compressionQuality: 1.0) else {
+            return
+        }
+        let json = ["success": true, "imageData": data] as [String : Any]
         GalleryView.resultCallBack?(json)
+        self.dismiss(animated: true) {
+            self.shouldDismiss?(true)
+        }
     }
 }
 
