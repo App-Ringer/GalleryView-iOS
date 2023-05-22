@@ -143,29 +143,31 @@ class PhotoGalleryVM {
     
     
     func collectionDidSelect(indexPath: IndexPath, collectionView: UICollectionView) {
-        collectionView.performBatchUpdates {
-            getRowNumber(collectionView: collectionView)
-            if let index = self.toolTipIndex,let oldData = allPhotos[displayCreatedDate[index.section]]  {
-                let dummyArr = oldData.filter({$0.isDummyCell == true})
-                if !dummyArr.isEmpty {
-                    let actualCellCount = (oldData.count-1) - dummyArr.count
-                    for val in actualCellCount..<(oldData.count - 1) {
-                        if val > index.item {
-                            insertedIndexArr.append(IndexPath(item: val+1, section: index.section))
-                        } else {
-                            insertedIndexArr.append(IndexPath(item: val, section: index.section))
+        getRowNumber(collectionView: collectionView)
+        delay(delay: 0.4) {
+            collectionView.performBatchUpdates {
+                if let index = self.toolTipIndex,let oldData = self.allPhotos[self.displayCreatedDate[index.section]]  {
+                    let dummyArr = oldData.filter({$0.isDummyCell == true})
+                    if !dummyArr.isEmpty {
+                        let actualCellCount = (oldData.count-1) - dummyArr.count
+                        for val in actualCellCount..<(oldData.count - 1) {
+                            if val > index.item {
+                                self.insertedIndexArr.append(IndexPath(item: val+1, section: index.section))
+                            } else {
+                                self.insertedIndexArr.append(IndexPath(item: val, section: index.section))
+                            }
                         }
                     }
+                    self.insertedIndexArr.append(index)
+                    print(self.insertedIndexArr)
+                    collectionView.insertItems(at: self.insertedIndexArr)
                 }
-                insertedIndexArr.append(index)
-                print(insertedIndexArr)
-                collectionView.insertItems(at: insertedIndexArr)
-            }
-        } completion: { finish in
-            if finish, let tIndex = self.toolTipIndex {
-                let attributes = collectionView.layoutAttributesForItem(at: tIndex)
-                if let frameValue = attributes?.frame, !collectionView.bounds.contains(frameValue ) {
-                    collectionView.scrollToItem(at: tIndex, at: .bottom, animated: true)
+            } completion: { finish in
+                if finish, let tIndex = self.toolTipIndex {
+                    let attributes = collectionView.layoutAttributesForItem(at: tIndex)
+                    if let frameValue = attributes?.frame, !collectionView.bounds.contains(frameValue ) {
+                        collectionView.scrollToItem(at: tIndex, at: .bottom, animated: true)
+                    }
                 }
             }
         }
@@ -174,7 +176,7 @@ class PhotoGalleryVM {
 
 //MARK: - Fetch Images and Pagination -
 extension PhotoGalleryVM {
-    func getImages(date: String, index: Int, dateIndex: Int, activityIndicator: UIActivityIndicatorView, collectionView: UICollectionView) {
+    func getImages(date: String, index: Int, dateIndex: Int, activityIndicator: UIActivityIndicatorView, collectionView: UICollectionView, bottomView: UIView, bottomViewHeight: NSLayoutConstraint) {
         if let assestModel =  allPhotos[date]?[index] {
             let options = PHImageRequestOptions()
             options.version = .original
@@ -184,7 +186,7 @@ extension PhotoGalleryVM {
                     if let arr = self.allPhotos[date], arr.count > index {
                         let dIndex = dateIndex
                         let d = self.createdDate[dIndex]
-                        self.getImages(date: d, index: index, dateIndex: dIndex, activityIndicator: activityIndicator, collectionView: collectionView)
+                        self.getImages(date: d, index: index, dateIndex: dIndex, activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
                     } else {
                         self.createdDate.remove(at: dateIndex)
                         if self.displayCreatedDate.indices.contains(dateIndex) {
@@ -194,7 +196,7 @@ extension PhotoGalleryVM {
                         if (self.createdDate.count - 1) >= dateIndex {
                             let dIndex = dateIndex
                             let d = self.createdDate[dIndex]
-                            self.getImages(date: d, index: 0, dateIndex: dIndex, activityIndicator: activityIndicator, collectionView: collectionView)
+                            self.getImages(date: d, index: 0, dateIndex: dIndex, activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
                         } else {
                             activityIndicator.isHidden = true
                         }
@@ -205,13 +207,13 @@ extension PhotoGalleryVM {
                 
                 self.allPhotos[date]?[index].image = image
                 if let arrCount = self.allPhotos[date]?.count, (arrCount - 1) > index {
-                    self.getImages(date: date, index: index + 1, dateIndex: dateIndex, activityIndicator: activityIndicator, collectionView: collectionView)
+                    self.getImages(date: date, index: index + 1, dateIndex: dateIndex, activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
                 } else {
                     print("createdDate.count => \((self.createdDate.count - 1)) dateIndex => \(dateIndex)")
                     if (self.createdDate.count - 1) > dateIndex , dateIndex < self.sectionData{
                         let dIndex = dateIndex + 1
                         let d = self.createdDate[dIndex]
-                        self.getImages(date: d, index: 0, dateIndex: dIndex, activityIndicator: activityIndicator, collectionView: collectionView)
+                        self.getImages(date: d, index: 0, dateIndex: dIndex, activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
                     } else {
                         if self.firstTime {
                             collectionView.reloadData()
@@ -221,14 +223,14 @@ extension PhotoGalleryVM {
                             self.storedDisplayCreatedDate.append(self.createdDate[dateIndex])
                         }
                         self.isFetchingData = false
-                        self.paginationData(activityIndicator: activityIndicator, collectionView: collectionView)
+                        self.paginationData(activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
                     }
                 }
             }
         }
     }
     
-    func fetchPhotos(activityIndicator: UIActivityIndicatorView, collectionView: UICollectionView) {
+    func fetchPhotos(activityIndicator: UIActivityIndicatorView, collectionView: UICollectionView, bottomView: UIView, bottomViewHeight: NSLayoutConstraint) {
         activityIndicator.isHidden = false
         PHPhotoLibrary.requestAuthorization { (status) in
             switch status {
@@ -262,7 +264,7 @@ extension PhotoGalleryVM {
                 self.createdDate.sort(by: { $0.convertStringToDate().compare($1.convertStringToDate()) == .orderedDescending })
                 self.sectionData = self.createdDate.count > self.sectionData ? self.sectionData : self.createdDate.count
                 self.displayCreatedDate = Array(self.createdDate[0..<self.sectionData])
-                self.getImages(date: self.createdDate.first ?? "", index: 0, dateIndex: 0, activityIndicator: activityIndicator, collectionView: collectionView)
+                self.getImages(date: self.createdDate.first ?? "", index: 0, dateIndex: 0, activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
                 DispatchQueue.main.async {
                     //                    self.collectionView.reloadData()
                 }
@@ -284,12 +286,24 @@ extension PhotoGalleryVM {
         }
     }
     
-    func paginationData(activityIndicator: UIActivityIndicatorView, collectionView: UICollectionView) {
+    func paginationData(activityIndicator: UIActivityIndicatorView, collectionView: UICollectionView, bottomView: UIView, bottomViewHeight: NSLayoutConstraint) {
         if !isFetchingData && createdDate.count > sectionData {
             isFetchingData = true
             let newIndex = sectionData
             sectionData = sectionData + 1
-            self.getImages(date: createdDate[newIndex], index: 0, dateIndex: newIndex, activityIndicator: activityIndicator, collectionView: collectionView)
+            self.getImages(date: createdDate[newIndex], index: 0, dateIndex: newIndex, activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
+        } else {
+            self.bottomView(isHidden: true, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
+        }
+    }
+    
+    func bottomView(isHidden: Bool, bottomView: UIView, bottomViewHeight: NSLayoutConstraint) {
+        if isHidden {
+            bottomView.isHidden = isHidden
+            bottomViewHeight.constant = 0
+        } else {
+            bottomView.isHidden = false
+            bottomViewHeight.constant = 44
         }
     }
 }

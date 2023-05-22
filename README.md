@@ -25,7 +25,7 @@ GalleryView.push(with: Your_Navigation_Controller)
 
 Present spoofsense
 ```swift
-GalleryView.present(with: Your_Navigation_Controller)
+GalleryView.present(with: Your_Navigation_Controller, animated: true)
 ```
 
 

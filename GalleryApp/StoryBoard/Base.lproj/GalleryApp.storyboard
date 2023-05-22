@@ -51,6 +51,21 @@
                                 <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
                                 <color key="color" name="AccentColor"/>
                             </activityIndicatorView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fef-HT-42L">
+                                <rect key="frame" x="0.0" y="818" width="393" height="0.0"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="aQ4-fF-a1d">
+                                        <rect key="frame" x="178" y="-18.333333333333371" width="37" height="37"/>
+                                        <color key="color" name="AccentColor"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="aQ4-fF-a1d" firstAttribute="centerY" secondItem="Fef-HT-42L" secondAttribute="centerY" id="E5T-sv-h5F"/>
+                                    <constraint firstAttribute="height" id="j2Q-yH-dbq"/>
+                                    <constraint firstItem="aQ4-fF-a1d" firstAttribute="centerX" secondItem="Fef-HT-42L" secondAttribute="centerX" id="wxP-6c-Gv0"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -58,21 +73,27 @@
                             <constraint firstItem="CvV-gz-DdQ" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="9bu-56-IXo"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="DKJ-dA-Iuu" secondAttribute="trailing" id="9fl-F0-Vrz"/>
                             <constraint firstItem="rdl-iq-wFD" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="9jA-69-bgJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Fef-HT-42L" secondAttribute="bottom" id="ENL-dq-YzE"/>
                             <constraint firstItem="DKJ-dA-Iuu" firstAttribute="top" secondItem="rdl-iq-wFD" secondAttribute="bottom" constant="8" id="ErJ-3R-gJZ"/>
                             <constraint firstItem="CvV-gz-DdQ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Fto-Qg-oTc"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="DKJ-dA-Iuu" secondAttribute="bottom" id="NUc-UK-ZMa"/>
+                            <constraint firstItem="Fef-HT-42L" firstAttribute="top" secondItem="DKJ-dA-Iuu" secondAttribute="bottom" id="bpL-7B-D81"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Fef-HT-42L" secondAttribute="trailing" id="btq-HY-9sQ"/>
                             <constraint firstItem="DKJ-dA-Iuu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ll8-4L-5dQ"/>
+                            <constraint firstItem="Fef-HT-42L" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="mJv-W4-4VN"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="rdl-iq-wFD" secondAttribute="trailing" constant="16" id="qTa-1I-h2P"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="CvV-gz-DdQ" id="Wku-8H-XLu"/>
+                        <outlet property="bottomActivityIndicator" destination="aQ4-fF-a1d" id="6rG-4K-7Lf"/>
+                        <outlet property="bottomView" destination="Fef-HT-42L" id="xah-DY-0Xw"/>
+                        <outlet property="bottomViewHeight" destination="j2Q-yH-dbq" id="e2h-2q-6j2"/>
                         <outlet property="collectionView" destination="DKJ-dA-Iuu" id="N0v-FD-bnu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="11" y="4"/>
+            <point key="canvasLocation" x="9.9236641221374047" y="3.5211267605633805"/>
         </scene>
         <!--Tool TipVC-->
         <scene sceneID="Xep-Ty-6lL">

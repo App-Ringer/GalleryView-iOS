@@ -12,6 +12,9 @@ class PhotoGalleryVC: UIViewController {
     //MARK: - IBOutlet -
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var bottomActivityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var bottomView: UIView!
+    @IBOutlet weak var bottomViewHeight: NSLayoutConstraint!
     
     //MARK: - Properties -
     var gesture: UIPinchGestureRecognizer!    
@@ -43,7 +46,7 @@ class PhotoGalleryVC: UIViewController {
     
     func viewDidLoadOps() {
         setCollectionView()
-        photoGalleryVM.fetchPhotos(activityIndicator: self.activityIndicator, collectionView: self.collectionView)
+        photoGalleryVM.fetchPhotos(activityIndicator: self.activityIndicator, collectionView: self.collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
         
         gesture = UIPinchGestureRecognizer(target: self, action: #selector(didReceivePinchGesture(gesture:)))
         collectionView.addGestureRecognizer(gesture)
@@ -119,9 +122,9 @@ class PhotoGalleryVC: UIViewController {
     
     func dismissGalleryView() {
         if GalleryView.isNaigationControllerPresent {
-            self.dismiss(animated: false)
+            self.dismiss(animated: true)
         } else {
-            self.navigationController?.popViewController(animated: false)
+            self.navigationController?.popViewController(animated: true)
         }
     }
 }
@@ -235,6 +238,9 @@ extension PhotoGalleryVC {
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         calculateVisibleIndexPath()
+        if ((collectionView.contentOffset.y + collectionView.frame.size.height) >= collectionView.contentSize.height) && (photoGalleryVM.createdDate.count > photoGalleryVM.sectionData) {
+            photoGalleryVM.bottomView(isHidden: false, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
+        }
     }
     
     func calculateVisibleIndexPath() {
