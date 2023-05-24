@@ -239,7 +239,9 @@ extension PhotoGalleryVC {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         calculateVisibleIndexPath()
         if ((collectionView.contentOffset.y + collectionView.frame.size.height) >= collectionView.contentSize.height) && (photoGalleryVM.createdDate.count > photoGalleryVM.sectionData) {
-            photoGalleryVM.bottomView(isHidden: false, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
+            if (photoGalleryVM.createdDate.count - 1)  > photoGalleryVM.sectionData {
+                photoGalleryVM.bottomView(isHidden: false, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
+            }
         }
     }
     
@@ -269,7 +271,7 @@ extension PhotoGalleryVC : UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath == photoGalleryVM.toolTipIndex {
-            return CGSize(width: (self.collectionView.bounds.size.width - 20), height: 120)
+            return CGSize(width: (self.collectionView.bounds.size.width), height: 120)
         } else {
             let rowCount = UIDevice.current.orientation.isLandscape ? photoGalleryVM.landscapeRowCellCount : photoGalleryVM.portraitRowCellCount
             let width = collectionView.frame.size.width / CGFloat(rowCount)

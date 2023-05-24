@@ -261,9 +261,10 @@ extension PhotoGalleryVM {
                     }
                     print(asset.creationDate?.convertDateToString() ?? "")
                 }
+                print(self.createdDate)
                 self.createdDate.sort(by: { $0.convertStringToDate().compare($1.convertStringToDate()) == .orderedDescending })
-                self.sectionData = self.createdDate.count > self.sectionData ? self.sectionData : self.createdDate.count
-                self.displayCreatedDate = Array(self.createdDate[0..<self.sectionData])
+                self.sectionData = (self.createdDate.count - 1) > self.sectionData ? self.sectionData : self.createdDate.count
+                self.displayCreatedDate = Array(self.createdDate[0...self.sectionData])
                 self.getImages(date: self.createdDate.first ?? "", index: 0, dateIndex: 0, activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
                 DispatchQueue.main.async {
                     //                    self.collectionView.reloadData()
@@ -287,10 +288,10 @@ extension PhotoGalleryVM {
     }
     
     func paginationData(activityIndicator: UIActivityIndicatorView, collectionView: UICollectionView, bottomView: UIView, bottomViewHeight: NSLayoutConstraint) {
-        if !isFetchingData && createdDate.count > sectionData {
+        if !isFetchingData && (createdDate.count - 1)  > sectionData {
             isFetchingData = true
-            let newIndex = sectionData
             sectionData = sectionData + 1
+            let newIndex = sectionData
             self.getImages(date: createdDate[newIndex], index: 0, dateIndex: newIndex, activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
         } else {
             self.bottomView(isHidden: true, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
