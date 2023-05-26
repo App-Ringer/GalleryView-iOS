@@ -144,7 +144,7 @@ class PhotoGalleryVM {
     
     func collectionDidSelect(indexPath: IndexPath, collectionView: UICollectionView) {
         getRowNumber(collectionView: collectionView)
-        delay(delay: 0.4) {
+        delay(delay: 0.3) {
             collectionView.performBatchUpdates {
                 if let index = self.toolTipIndex,let oldData = self.allPhotos[self.displayCreatedDate[index.section]]  {
                     let dummyArr = oldData.filter({$0.isDummyCell == true})
@@ -221,6 +221,7 @@ extension PhotoGalleryVM {
                             self.firstTime = false
                         } else {
                             self.storedDisplayCreatedDate.append(self.createdDate[dateIndex])
+                            self.bottomView(isHidden: true, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
                         }
                         self.isFetchingData = false
                         self.paginationData(activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
