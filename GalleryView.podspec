@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name             = "GalleryView"
-    s.version          = "0.0.10"
+    s.version          = "0.0.11"
     s.summary          = 'Grid View representation of your gallery.'
     s.license          = 'MIT'
     s.author           = {'Mohit' => 'mohit@appringer.com'}

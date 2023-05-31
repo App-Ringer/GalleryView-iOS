@@ -144,33 +144,33 @@ class PhotoGalleryVM {
     
     func collectionDidSelect(indexPath: IndexPath, collectionView: UICollectionView) {
         getRowNumber(collectionView: collectionView)
-        delay(delay: 0.3) {
-            collectionView.performBatchUpdates {
-                if let index = self.toolTipIndex,let oldData = self.allPhotos[self.displayCreatedDate[index.section]]  {
-                    let dummyArr = oldData.filter({$0.isDummyCell == true})
-                    if !dummyArr.isEmpty {
-                        let actualCellCount = (oldData.count-1) - dummyArr.count
-                        for val in actualCellCount..<(oldData.count - 1) {
-                            if val > index.item {
-                                self.insertedIndexArr.append(IndexPath(item: val+1, section: index.section))
-                            } else {
-                                self.insertedIndexArr.append(IndexPath(item: val, section: index.section))
-                            }
+        //        delay(delay: 0.3) {
+        collectionView.performBatchUpdates {
+            if let index = self.toolTipIndex,let oldData = self.allPhotos[self.displayCreatedDate[index.section]]  {
+                let dummyArr = oldData.filter({$0.isDummyCell == true})
+                if !dummyArr.isEmpty {
+                    let actualCellCount = (oldData.count-1) - dummyArr.count
+                    for val in actualCellCount..<(oldData.count - 1) {
+                        if val > index.item {
+                            self.insertedIndexArr.append(IndexPath(item: val+1, section: index.section))
+                        } else {
+                            self.insertedIndexArr.append(IndexPath(item: val, section: index.section))
                         }
                     }
-                    self.insertedIndexArr.append(index)
-                    print(self.insertedIndexArr)
-                    collectionView.insertItems(at: self.insertedIndexArr)
                 }
-            } completion: { finish in
-                if finish, let tIndex = self.toolTipIndex {
-                    let attributes = collectionView.layoutAttributesForItem(at: tIndex)
-                    if let frameValue = attributes?.frame, !collectionView.bounds.contains(frameValue ) {
-                        collectionView.scrollToItem(at: tIndex, at: .bottom, animated: true)
-                    }
+                self.insertedIndexArr.append(index)
+                print(self.insertedIndexArr)
+                collectionView.insertItems(at: self.insertedIndexArr)
+            }
+        } completion: { finish in
+            if finish, let tIndex = self.toolTipIndex {
+                let attributes = collectionView.layoutAttributesForItem(at: tIndex)
+                if let frameValue = attributes?.frame, !collectionView.bounds.contains(frameValue ) {
+                    collectionView.scrollToItem(at: tIndex, at: .bottom, animated: true)
                 }
             }
         }
+        //        }
     }
 }
 
@@ -264,7 +264,7 @@ extension PhotoGalleryVM {
                 }
                 print(self.createdDate)
                 self.createdDate.sort(by: { $0.convertStringToDate().compare($1.convertStringToDate()) == .orderedDescending })
-                self.sectionData = (self.createdDate.count - 1) > self.sectionData ? self.sectionData : self.createdDate.count
+                self.sectionData = (self.createdDate.count - 1) > self.sectionData ? self.sectionData : (self.createdDate.count - 1)
                 self.displayCreatedDate = Array(self.createdDate[0...self.sectionData])
                 self.getImages(date: self.createdDate.first ?? "", index: 0, dateIndex: 0, activityIndicator: activityIndicator, collectionView: collectionView, bottomView: bottomView, bottomViewHeight: bottomViewHeight)
                 DispatchQueue.main.async {
